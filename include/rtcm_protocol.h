@@ -268,7 +268,7 @@ typedef struct {
     rtcm_message_type_t message_id :12;       // DF002
     uint16_t reference_station_id :12;      // DF003
     uint8_t antenna_descriptor_length :8;   // DF029
-    char antenna_descriptor[32];            // DF030
+    char *antenna_descriptor;            // DF030
     uint8_t antenna_setup_id :8;            // DF031
     uint8_t antenna_serial_number_length :8; // DF032
     char antenna_serial_number[32];         // DF033

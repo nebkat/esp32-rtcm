@@ -21,6 +21,36 @@
 #include "rtcm_protocol.h"
 #include "rtcm_tools.h"
 
+#define B(field) message->field = read_bit(buffer, i); i++;
+#define U(bits, field) message->field = read_unsigned(buffer, i, bits); i += bits;
+#define I(bits, field) message->field = read_signed(buffer, i, bits); i += bits;
+#define I_SM(bits, field) message->field = (read_bit(buffer, i) ? 1 : -1) * read_unsigned(buffer, i, bits - 1); i += bits;
+#define S(lengthBits, field) if (true) { \
+        message->field##_length = read_unsigned(buffer, i, lengthBits); \
+        read_string(&message->field, buffer, i + lengthBits, message->field##_length); \
+        i += lengthBits + message->field##_length * 8; \
+    }
+
+#define S_UTF8(lengthBits, charBits, field) if (true) { \
+        uint8_t length = read_unsigned(buffer, i, lengthBits); \
+        read_string(buffer, i + lengthBits + charBits); \
+        i += lengthBits + charBits + length * 8; \
+    }
+
+uint64_t read_unsigned(const uint8_t *buffer, size_t offset, size_t bits) {
+    return 0;
+}
+void read_string(char **target, const uint8_t *buffer, size_t offset, size_t bytes) {
+
+}
+
+size_t rtcm_decode_1007(rtcm_message_receiver_antenna_descriptor *message, const uint8_t *buffer, size_t i) {
+    U(12, reference_station_id)
+    S(8, antenna_descriptor)
+
+    return i;
+}
+
 /**
  * Copy block of memory to arbitrary bit offset
  *
